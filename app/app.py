@@ -3,6 +3,7 @@ import time
 import paho.mqtt.client as mqtt
 from typing import Dict
 from fastapi import FastAPI
+from fastapi import HTTPException
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -45,6 +46,7 @@ class Mission(BaseModel):
 @app.post("/mission/")
 def create_mission(mission: Mission):
     mission_data = mission.dict()
+    missions[mission.id] = mission.dict()
     mqtt_client.publish(MQTT_TOPIC, json.dumps(mission_data))
     return {"status": "Mission published to MQTT", "mission": mission_data}
 

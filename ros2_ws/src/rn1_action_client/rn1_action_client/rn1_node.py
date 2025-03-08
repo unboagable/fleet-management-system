@@ -1,11 +1,16 @@
+import json
+import os
 import rclpy
 from rclpy.node import Node
-import json
 import paho.mqtt.client as mqtt
 from example_interfaces.action import Fibonacci
 from rclpy.action import ActionClient
 
-MQTT_BROKER = "project_root-mqtt-1"
+
+MQTT_BROKER = os.getenv("MQTT_BROKER", "mqtt")
+
+
+#MQTT_BROKER = "project_root-mqtt-1"
 MQTT_TOPIC = "missions"
 
 import time
