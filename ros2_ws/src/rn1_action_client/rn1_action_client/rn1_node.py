@@ -8,15 +8,30 @@ from rclpy.action import ActionClient
 MQTT_BROKER = "localhost"
 MQTT_TOPIC = "missions"
 
+import time
+import paho.mqtt.client as mqtt
+
+MAX_RETRIES = 5
+
+
+
 class RN1Client(Node):
     def __init__(self):
         super().__init__('rn1_client')
         self.client = ActionClient(self, Fibonacci, 'mission_action')
 
         # MQTT Setup
-        self.mqtt_client = mqtt.Client()
-        self.mqtt_client.on_message = self.on_mqtt_message
-        self.mqtt_client.connect(MQTT_BROKER, 1883, 60)
+        for attempt in range(MAX_RETRIES):
+            try:
+                self.mqtt_client = mqtt.Client()
+                self.mqtt_client.on_message = self.on_mqtt_message
+                self.mqtt_client.connect(MQTT_BROKER, 1883, 60)
+                print("MQTT Connection Successful!")
+                break
+            except ConnectionRefusedError:
+                print(f"MQTT Connection failed, retrying ({attempt+1}/{MAX_RETRIES})...")
+                time.sleep(2)
+        
         self.mqtt_client.subscribe(MQTT_TOPIC)
         self.mqtt_client.loop_start()
 
