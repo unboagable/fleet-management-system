@@ -1,0 +1,25 @@
+FROM ros:humble
+
+# Install dependencies first (optimizing Docker caching)
+RUN apt update && apt install -y python3-pip ros-humble-example-interfaces \
+    && pip3 install paho-mqtt
+
+# Set up ROS 2 environment
+SHELL ["/bin/bash", "-c"]
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+
+RUN mkdir /ros2_ws
+RUN mkdir /ros2_ws/src
+RUN mkdir /ros2_ws/src/rn1_action_client
+
+# Copy the Python node into the container
+WORKDIR /ros2_ws/src/rn1_action_client
+COPY . /ros2_ws/src/rn1_action_client
+
+RUN echo "source /ros2_ws/install/setup.bash" >> ~/.bashrc
+
+# Make the script executable
+RUN chmod +x ros2_ws/src/rn1_action_client/rn1_action_client/rn1_node.py
+
+# Run the ROS 2 node on container start
+ENTRYPOINT ["bash", "-c", "source /opt/ros/humble/setup.bash && python3 rn1_action_client/rn1_node.py"]

@@ -1,0 +1,36 @@
+services:
+  api:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mqtt
+    volumes:
+      - ./app:/app
+
+  mqtt:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+
+  rn1:
+    build:
+      context: .
+      dockerfile: Dockerfile.rn1
+    volumes:
+      - ./ros2_ws:/ros2_ws  # Mount ROS2 workspace inside container
+    depends_on:
+      - mqtt
+    environment:
+      - MQTT_BROKER=mqtt
+
+  rn2:
+    build:
+      context: .
+      dockerfile: Dockerfile.rn2
+    volumes:
+      - ./ros2_ws:/ros2_ws  # Mount ROS2 workspace inside container
+    depends_on:
+      - rn1  # Ensure rn1 runs first

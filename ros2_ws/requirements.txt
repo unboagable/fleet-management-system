@@ -1,0 +1,1 @@
+paho-mqtt       # MQTT client for ROS2 communication
