@@ -23,9 +23,9 @@ class RN1Client(Node):
         # MQTT Setup
         for attempt in range(MAX_RETRIES):
             try:
-                self.mqtt_client = mqtt.Client()
+                self.mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
                 self.mqtt_client.on_message = self.on_mqtt_message
-                self.mqtt_client.connect(MQTT_BROKER, 1883, 60)
+                self.mqtt_client.connect(MQTT_BROKER, 1883, keepalive=300)
                 print("MQTT Connection Successful!")
                 break
             except ConnectionRefusedError:
