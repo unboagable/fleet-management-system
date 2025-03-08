@@ -5,7 +5,7 @@ import paho.mqtt.client as mqtt
 from example_interfaces.action import Fibonacci
 from rclpy.action import ActionClient
 
-MQTT_BROKER = "localhost"
+MQTT_BROKER = "project_root-mqtt-1"
 MQTT_TOPIC = "missions"
 
 import time
