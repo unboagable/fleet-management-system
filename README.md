@@ -1,4 +1,4 @@
-# 🚀 FleetGlue - ROS2 + FastAPI + MQTT Deployment Guide
+# 🚀 ROS2 + FastAPI + MQTT Deployment Guide
 
 ## **📌 Overview**
 This is a **Fleet Management System** using:
